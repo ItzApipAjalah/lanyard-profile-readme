@@ -78,27 +78,26 @@ export async function fetchUserImages(data: Data, settings: ProfileSettings) {
 
   if (activity?.assets?.large_image)
     assetLargeImage = await encodeBase64(
-      activity.assets?.large_image.startsWith("mp:external/")
-        ? `https://media.discordapp.net/${activity.assets.large_image.replace(
-            "mp:",
-            ""
-          )}`
+      activity.assets.large_image.startsWith("mp:external/")
+        ? `https://media.discordapp.net/${activity.assets.large_image.replace("mp:", "")}`
+        : activity.assets.large_image.startsWith("mp:attachments/")
+        ? `https://cdn.discordapp.com/attachments/${activity.assets.large_image.replace("mp:attachments/", "")}`
         : `https://cdn.discordapp.com/app-assets/${activity.application_id}/${activity.assets.large_image}.webp`,
       ImageSize.ACTIVITY_LARGE,
       settings.theme
     );
-
+  
   if (activity?.assets?.small_image)
     assetSmallImage = await encodeBase64(
       activity.assets.small_image.startsWith("mp:external/")
-        ? `https://media.discordapp.net/${activity.assets.small_image.replace(
-            "mp:",
-            ""
-          )}`
+        ? `https://media.discordapp.net/${activity.assets.small_image.replace("mp:", "")}`
+        : activity.assets.small_image.startsWith("mp:attachments/")
+        ? `https://cdn.discordapp.com/attachments/${activity.assets.small_image.replace("mp:attachments/", "")}`
         : `https://cdn.discordapp.com/app-assets/${activity.application_id}/${activity.assets.small_image}.webp`,
       ImageSize.ACTIVITY_SMALL,
       settings.theme
     );
+  
 
   if (userStatus?.emoji?.id)
     userEmoji = await encodeBase64(
